@@ -29,27 +29,17 @@ public class IntercomTest {
     }
 
     @Test
-    public void testApiKey() {
-        Intercom.setApiKey("k1");
-        assertEquals("k1", Intercom.getApiKey());
-        assertEquals(Intercom.AuthKeyType.API_KEY, Intercom.getAuthKeyType());
-        assertNull(Intercom.getToken());
-    }
-
-    @Test
     public void testToken() {
         Intercom.setToken("t1");
         assertEquals("t1", Intercom.getToken());
         assertEquals(Intercom.AuthKeyType.TOKEN, Intercom.getAuthKeyType());
-        assertNull(Intercom.getApiKey());
     }
 
     @Test
     public void testStaticContext() throws Exception {
-        Intercom.setApiKey("k1");
-        assertEquals("k1", Intercom.getApiKey());
-        assertNull(Intercom.getToken());
-        assertEquals(Intercom.AuthKeyType.API_KEY, Intercom.getAuthKeyType());
+        Intercom.setToken("t1");
+        assertEquals("t1", Intercom.getToken());
+        assertEquals(Intercom.AuthKeyType.TOKEN, Intercom.getAuthKeyType());
         Intercom.setAppID("app1");
         assertEquals("app1", Intercom.getAppID());
         Intercom.setConnectionTimeout(98765);
@@ -66,14 +56,12 @@ public class IntercomTest {
         tt1.waitUntilComplete();
         tt2.waitUntilComplete();
 
-        assertEquals(Intercom.getApiKey(), tt1.apiKey);
         assertEquals(Intercom.getAuthKeyType(), tt1.authKeyType);
         assertEquals(Intercom.getToken(), tt1.token);
         assertEquals(Intercom.getConnectionTimeout(), tt1.connectionTimeout);
         assertEquals(Intercom.getRequestTimeout(), tt1.requestTimeout);
         assertEquals(Intercom.isRequestUsingCaches(), tt1.requestUsingCaches);
 
-        assertEquals(Intercom.getApiKey(), tt2.apiKey);
         assertEquals(Intercom.getAuthKeyType(), tt2.authKeyType);
         assertEquals(Intercom.getToken(), tt2.token);
         assertEquals(Intercom.getConnectionTimeout(), tt2.connectionTimeout);
@@ -93,15 +81,13 @@ public class IntercomTest {
         tt2.waitUntilComplete();
 
         assertEquals(tt1.localToken, tt1.token);
-        assertNull(tt1.apiKey);
         assertEquals(Intercom.AuthKeyType.TOKEN, tt1.authKeyType);
         assertEquals(tt1.localConnectionTimeout, tt1.connectionTimeout);
         assertEquals(tt1.localRequestTimeout, tt1.requestTimeout);
         assertEquals(tt1.localRequestUsingCaches, tt1.requestUsingCaches);
 
-        assertEquals(tt2.localApiKey, tt2.apiKey);
-        assertNull(tt2.token);
-        assertEquals(Intercom.AuthKeyType.API_KEY, tt2.authKeyType);
+        assertEquals(tt2.localToken, tt2.token);
+        assertEquals(Intercom.AuthKeyType.TOKEN, tt2.authKeyType);
         assertEquals(tt2.localConnectionTimeout, tt2.connectionTimeout);
         assertEquals(tt2.localRequestTimeout, tt2.requestTimeout);
         assertEquals(tt2.localRequestUsingCaches, tt2.requestUsingCaches);
@@ -111,32 +97,32 @@ public class IntercomTest {
     public void testClearThreadLocalContexts() throws Exception {
         Intercom.setUseThreadLocal(true);
 
-        Intercom.setApiKey("testKey");
-        assertEquals("testKey", Intercom.getApiKey());
+        Intercom.setToken("testToken");
+        assertEquals("testToken", Intercom.getToken());
 
         Intercom.clearThreadLocalContexts();
-        assertNull(Intercom.getApiKey());
+        assertNull(Intercom.getToken());
 
-        Intercom.setApiKey("testKey2");
-        assertEquals("testKey2", Intercom.getApiKey());
+        Intercom.setToken("testToken2");
+        assertEquals("testToken2", Intercom.getToken());
     }
 
     @Test
     public void testClearThreadLocalContext() throws Exception {
         Intercom.setUseThreadLocal(true);
 
-        Intercom.setApiKey("testKey");
-        assertEquals("testKey", Intercom.getApiKey());
+        Intercom.setToken("testToken");
+        assertEquals("testToken", Intercom.getToken());
 
         Intercom.clearThreadLocalContext();
-        assertNull(Intercom.getApiKey());
+        assertNull(Intercom.getToken());
 
-        Intercom.setApiKey("testKey2");
-        assertEquals("testKey2", Intercom.getApiKey());
+        Intercom.setToken("testToken2");
+        assertEquals("testToken2", Intercom.getToken());
     }
 
     class ThreadTester implements Runnable {
-        String apiKey, appId, token;
+        String appId, token;
         Intercom.AuthKeyType authKeyType;
         int connectionTimeout = -1;
         int requestTimeout = -1;
@@ -145,7 +131,6 @@ public class IntercomTest {
 
         @Override
         public void run() {
-            apiKey = Intercom.getApiKey();
             authKeyType = Intercom.getAuthKeyType();
             token = Intercom.getToken();
             appId = Intercom.getAppID();
@@ -189,7 +174,7 @@ public class IntercomTest {
 
     class ThreadLocalTester2 extends ThreadTester {
         final Random rnd = new Random();
-        final String localApiKey = "api";
+        final String localToken = "t2";
         final String localAppId = "appId";
         final int localConnectionTimeout = rnd.nextInt();
         final int localRequestTimeout = rnd.nextInt();
@@ -198,7 +183,7 @@ public class IntercomTest {
         @Override
         public void run() {
             Intercom.clearThreadLocalContext();
-            Intercom.setApiKey(localApiKey);
+            Intercom.setToken(localToken);
             Intercom.setAppID(localAppId);
             Intercom.setConnectionTimeout(localConnectionTimeout);
             Intercom.setRequestTimeout(localRequestTimeout);

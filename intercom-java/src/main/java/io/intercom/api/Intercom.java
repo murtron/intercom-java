@@ -5,8 +5,7 @@ import java.net.URI;
 public class Intercom {
 
     static class Context {
-        private volatile AuthKeyType authKeyType = AuthKeyType.API_KEY;
-        private volatile String apiKey;
+        private volatile AuthKeyType authKeyType = AuthKeyType.TOKEN;
         private volatile String token;
         private volatile String appID;
         private volatile int connectionTimeout = 3 * 1000;
@@ -21,7 +20,6 @@ public class Intercom {
     private static volatile URI apiBaseURI = API_BASE_URI;
 
     enum AuthKeyType {
-        API_KEY,
         TOKEN
     }
 
@@ -92,18 +90,6 @@ public class Intercom {
         Context context = getContext();
         context.authKeyType = AuthKeyType.TOKEN;
         context.token = token;
-        context.apiKey = null;
-    }
-
-    public static String getApiKey() {
-        return getContext().apiKey;
-    }
-
-    public static void setApiKey(String apiKey) {
-        Context context = getContext();
-        context.authKeyType = AuthKeyType.API_KEY;
-        context.apiKey = apiKey;
-        context.token = null;
     }
 
     public static URI getApiBaseURI() {
