@@ -71,6 +71,16 @@ public class Conversation extends TypedData {
             .post(Conversation.class, new AdminReply.AdminStringReply(reply));
     }
 
+    public static Conversation markAsRead(String id) {
+        final URI uri = UriBuilder.newBuilder()
+                .path("conversations")
+                .path(id)
+                .build();
+
+        return new HttpClient(uri)
+                .put(Conversation.class, new ConversationRead());
+    }
+
     public static UserMessage create(UserMessage message) {
         return DataResource.create(message, "messages", UserMessage.class);
     }
