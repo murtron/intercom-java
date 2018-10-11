@@ -248,7 +248,7 @@ class HttpClient {
     }
 
     private String generateAuthString(String username, String password) {
-        return Base64.encodeBase64String((username + ":" + password).getBytes());
+        return Base64.encodeBase64((username + ":" + password).getBytes());
     }
 
     private Map<String, String> createHeaders() {
